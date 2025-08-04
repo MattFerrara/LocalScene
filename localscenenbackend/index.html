@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Concert Mapper</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">LOCALSCENE</div>
+  <span onclick="switchTab('homeTab')">Homepage</span>
+  <span onclick="switchTab('mapTab')">Map View</span>
+  <span onclick="switchTab('listTab')">Show List</span>
+  <span onclick="switchTab('postTab')">Submit a Show</span>
+  <span onclick="switchTab('registerTab')">Register</span>
+  <span onclick="switchTab('loginTab')">Login</span>
+  <span id="logoutButton" style="display: none;" onclick="logout()">Logout</span>
+</nav>
+
+<div id="registerTab" class="tab" style="display: none;">
+  <h2>Register Account</h2>
+  <form id="registerForm">
+    <label>Email <input type="email" name="email" required></label>
+    <label>Password <input type="password" name="password" required></label>
+    <button type="submit">Register</button>
+  </form>
+</div>
+
+<div id="loginTab" class="tab" style="display: none;">
+  <h2>Login to Account</h2>
+  <form id="loginForm">
+    <label>Email <input type="email" name="email" required></label>
+    <label>Password <input type="password" name="password" required></label>
+    <button type="submit">Login</button>
+  </form>
+</div>
+
+<div id="homeTab" class="tab active">
+
+    <div class="home-section">
+    <div class="home-content">
+      <div class="welcome-text">
+        <h2>Welcome to <span class="highlight">LocalScene</span></h2>
+        <p>Discover, share, and attend music events in your area.</p>
+        <p>
+          <strong>🎶 Musicians:</strong> Promote your gigs.<br>
+          <strong>📍 Fans:</strong> Find local shows near you.<br>
+          <strong>📢 Venues:</strong> List your upcoming events.
+        </p>
+        <p>Use the tabs above to explore the map, browse shows, or post your own!</p>
+      </div>
+      <div class="carousel-container">
+        <div class="carousel-slide">
+          <img src="images/concert1.jpg" alt="Concert 1">
+          <img src="images/concert2.jpg" alt="Concert 2">
+          <img src="images/concert3.jpg" alt="Concert 3">
+        </div>
+      </div>
+    </div>
+
+    
+  <div class="hero">
+    <div class="hero-overlay">
+      <h1>Discover Your Local Music Scene</h1>
+      <p>Explore shows, venues, and artists near you — or post your own!</p>
+      <button onclick="switchTab('mapTab')">View the Map</button>
+    </div>
+  </div>
+
+
+    <section class="quotes">
+      <blockquote>“I found my new favorite local band through LocalScene!” – Jenna</blockquote>
+      <blockquote>“It’s like a community board for music lovers.” – Trevor</blockquote>
+    </section>
+
+    <div class="cta-banner">
+      <h3>Are you hosting a show?</h3>
+      <button onclick="handlePostButtonClick()">Post It Now</button>
+    </div>
+  </div>
+</div>
+
+<div id="mapTab" class="tab" style="display: none;">
+  <div id="map"></div>
+</div>
+
+<div id="listTab" class="tab" style="display: none;">
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+    <h2>All Concerts</h2>
+    <button id="sortByClosestButton" style="margin-right: 10px;">Sort by Closest</button>
+  </div>
+  <ul id="concertList"></ul>
+</div>
+
+<div id="postTab" class="tab" style="display: none;">
+  <h2>Post A Show</h2>
+  <form id="showForm">
+    <label>Band Name <input type="text" name="band" required></label>
+    <label>Street Address <input type="text" name="address" required></label>
+    <label>Town <input type="text" name="town" required></label>
+    <label>State
+      <select name="state" required>
+        <option value="">Select State</option>
+                <option value="AL">Alabama</option>
+                <option value="AZ">Arizona</option>
+                <option value="AR">Arkansas</option>
+                <option value="CA">California</option>
+                <option value="CO">Colorado</option>
+                <option value="CT">Connecticut</option>
+                <option value="DE">Delaware</option>
+                <option value="FL">Florida</option>
+                <option value="GA">Georgia</option>
+                <option value="ID">Idaho</option>
+                <option value="IL">Illinois</option>
+                <option value="IN">Indiana</option>
+                <option value="IA">Iowa</option>
+                <option value="KS">Kansas</option>
+                <option value="KY">Kentucky</option>
+                <option value="LA">Louisiana</option>
+                <option value="ME">Maine</option>
+                <option value="MD">Maryland</option>
+                <option value="MA">Massachusetts</option>
+                <option value="MI">Michigan</option>
+                <option value="MN">Minnesota</option>
+                <option value="MS">Mississippi</option>
+                <option value="MO">Missouri</option>
+                <option value="MT">Montana</option>
+                <option value="NE">Nebraska</option>
+                <option value="NV">Nevada</option>
+                <option value="NH">New Hampshire</option>
+                <option value="NJ">New Jersey</option>
+                <option value="NM">New Mexico</option>
+                <option value="NY">New York</option>
+                <option value="NC">North Carolina</option>
+                <option value="ND">North Dakota</option>
+                <option value="OH">Ohio</option>
+                <option value="OK">Oklahoma</option>
+                <option value="OR">Oregon</option>
+                <option value="PA">Pennsylvania</option>
+                <option value="RI">Rhode Island</option>
+                <option value="SC">South Carolina</option>
+                <option value="SD">South Dakota</option>
+                <option value="TN">Tennessee</option>
+                <option value="TX">Texas</option>
+                <option value="UT">Utah</option>
+                <option value="VT">Vermont</option>
+                <option value="VA">Virginia</option>
+                <option value="WA">Washington</option>
+                <option value="WV">West Virginia</option>
+                <option value="WI">Wisconsin</option>
+                <option value="WY">Wyoming</option>
+      </select>
+    </label>
+    <label>Venue Type
+      <select name="venue">
+        <option value="House">House</option>
+        <option value="Bar">Bar</option>
+        <option value="Concert Hall">Concert Hall</option>
+        <option value="Club">Club</option>
+        <option value="Other">Other</option>
+      </select>
+    </label>
+
+    <label>Date <input type="date" name="date" required></label>
+    <label>Time <select name="time" required></select></label>
+    <label>Price <input type="number" name="price" max="150"></label>
+    
+    <label>Genres</label>
+<div class="custom-multiselect">
+  <div class="selected-options" onclick="toggleGenreDropdown()">Select Genres</div>
+  <div class="options-list" id="genreOptions">
+    <label><input type="checkbox" value="Metal"> Metal</label>
+    <label><input type="checkbox" value="Punk"> Punk</label>
+    <label><input type="checkbox" value="Rock"> Rock</label>
+    <label><input type="checkbox" value="Pop"> Pop</label>
+    <label><input type="checkbox" value="Blues"> Blues</label>
+    <label><input type="checkbox" value="Country"> Country</label>
+    <label><input type="checkbox" value="Jazz"> Jazz</label>
+    <label><input type="checkbox" value="Classical"> Classical</label>
+    <label><input type="checkbox" value="Other"> Other</label>
+  </div>
+</div>
+<input type="hidden" name="genres" id="selectedGenres">
+
+    <label>Other Bands Playing <textarea name="others" placeholder="Enter other acts here..."></textarea></label>
+    <label>Age of Entry
+      <select name="age">
+        <option value="All Ages">All Ages</option>
+        <option value="18+">18+</option>
+        <option value="21+">21+</option>
+      </select>
+    </label>
+    <button type="submit">Submit</button>
+  </form>
+</div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<script>
+const map = L.map('map', {
+  center: [39.8283, -98.5795],
+  zoom: 5,
+  minZoom: 5,
+  maxZoom: 18,
+  maxBounds: [[24.396308, -125.000000], [49.384358, -66.934570]],
+  zoomControl: false
+});
+
+L.control.zoom({ position: 'bottomleft' }).addTo(map);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '© OpenStreetMap contributors'
+}).addTo(map);
+
+// Global array to store all fetched concert data
+let allConcertsData = [];
+let userLocation = null;
+
+// Initialize Marker Cluster Group
+const markerClusterGroup = L.markerClusterGroup();
+map.addLayer(markerClusterGroup); // Add the cluster group to the map once
+
+function setDateConstraints() {
+  const dateInput = document.querySelector('input[name="date"]');
+  if (!dateInput) return;
+
+  // Create a new Date object for today, and set its time to 00:00:00.000 (midnight)
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // Set to start of the day
+  const todayStr = today.toISOString().split('T')[0];
+  dateInput.min = todayStr;
+
+  const future = new Date();
+  future.setDate(today.getDate() + 14);
+  const futureStr = future.toISOString().split('T')[0];
+  dateInput.max = futureStr;
+}
+
+function populateTimeOptions() {
+  const timeSelect = document.querySelector('select[name="time"]');
+  if (!timeSelect) return;
+  timeSelect.innerHTML = '';
+
+  for (let hour = 0; hour < 24; hour++) {
+    for (let minute = 0; minute < 60; minute += 15) {
+      const timeValue = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+      const d = new Date(`1970-01-01T${timeValue}:00`);
+      const timeLabel = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+
+      const option = document.createElement('option');
+      option.value = timeValue;
+      option.textContent = timeLabel;
+      if (hour === 19 && minute === 0) option.selected = true;
+      timeSelect.appendChild(option);
+    }
+  }
+}
+
+function switchTab(tabId) {
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.classList.remove('active');
+    tab.style.display = 'none';
+  });
+
+  const activeTab = document.getElementById(tabId);
+  if (activeTab) { // Check if the tab exists
+    activeTab.classList.add('active');
+    activeTab.style.display = 'block';
+  }
+
+  document.querySelectorAll('nav span').forEach(span => {
+    span.classList.remove('active-nav');
+    if (span.getAttribute('onclick') && span.getAttribute('onclick').includes(tabId)) {
+      span.classList.add('active-nav');
+    }
+  });
+
+  if (tabId === 'mapTab') {
+    setTimeout(() => map.invalidateSize(), 50);
+  }
+}
+
+async function loadConcerts() {
+  document.getElementById('concertList').innerHTML = '';
+  markerClusterGroup.clearLayers(); // Clear all markers from the cluster group
+  markers = {}; // Clear individual markers object
+  allConcertsData = []; // Clear previous data before fetching
+
+  try {
+    const res = await fetch('http://localhost:3000/api/concerts');
+    if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    const shows = await res.json();
+    allConcertsData = shows; // Store the full data including lat/lon
+    console.log("Concerts loaded:", allConcertsData);
+    
+    shows.forEach(show => {
+        addConcertMarker(show);
+        appendToList(show);
+    });
+  } catch (err) {
+    console.error('Failed to load concerts:', err);
+    alert('Failed to load concerts. Please try again later.');
+  }
+}
+
+// `markers` is used to keep track of individual markers if you need to reference them later,
+// but for map display, `markerClusterGroup` is handling adding/removing.
+let markers = {}; 
+
+function addConcertToMapAndList(show) {
+  addConcertMarker(show);
+  appendToList(show);
+}
+
+function formatShowTime(utcTimestamp, timeZone) {
+  const date = new Date(utcTimestamp);
+  return date.toLocaleTimeString('en-US', {
+    timeZone: timeZone,
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true
+  });
+}
+
+function addConcertMarker(show) {
+  if (show.lat == null || show.lon == null || isNaN(show.lat) || isNaN(show.lon)) {
+      console.warn("Skipping marker for show due to invalid coordinates:", show);
+      return;
+  }
+  
+  const formattedTime = formatShowTime(show.utcTimestamp, show.timeZone);
+  const genres = Array.isArray(show.genres) && show.genres.length > 0 ? `<br>Genres: ${show.genres.join(', ')}` : '';
+  const popup = `<strong>${show.band}</strong><br>${show.address}<br>${show.date} at ${formattedTime}<br>Venue: ${show.venue}<br>Price: $${show.price || 'Free'}<br>Other Bands: ${show.others}<br>Age: ${show.age}${genres}`;
+  
+  const marker = L.marker([show.lat, show.lon]).bindPopup(popup);
+  markerClusterGroup.addLayer(marker); // Add marker to the cluster group
+  markers[show._id] = marker; 
+}
+
+function appendToList(show) {
+  const formattedTime = formatShowTime(show.utcTimestamp, show.timeZone);
+  const li = document.createElement('li');
+  const genres = Array.isArray(show.genres) && show.genres.length > 0 ? `<br>Genres: ${show.genres.join(', ')}` : '';
+  li.id = `item-${show._id}`;
+  li.innerHTML = `<strong>${show.band}</strong><br>${show.address}<br>${show.date} at ${formattedTime}<br>Venue: ${show.venue}<br>Price: $${show.price || 'Free'}<br>Other Bands: ${show.others}<br>Age: ${show.age}${genres}`;
+  document.getElementById('concertList').appendChild(li);
+}
+
+// Function to get user's current location
+function getUserLocation() {
+  return new Promise((resolve, reject) => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          userLocation = {
+            lat: position.coords.latitude,
+            lon: position.coords.longitude
+          };
+          console.log("User location obtained:", userLocation);
+          resolve(userLocation);
+        },
+        error => {
+          console.error("Error getting user location:", error);
+          alert("Could not retrieve your location. Please enable location services for this feature.");
+          reject(error);
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      );
+    } else {
+      alert("Geolocation is not supported by your browser.");
+      reject(new Error("Geolocation not supported"));
+    }
+  });
+}
+
+// Haversine formula to calculate distance between two lat/lon points
+function haversineDistance(coords1, coords2) {
+  const R = 6371e3; // metres
+  const φ1 = coords1.lat * Math.PI / 180; // φ, λ in radians
+  const φ2 = coords2.lat * Math.PI / 180;
+  const Δφ = (coords2.lat - coords1.lat) * Math.PI / 180;
+  const Δλ = (coords2.lon - coords1.lon) * Math.PI / 180;
+
+  const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+            Math.cos(φ1) * Math.cos(φ2) *
+            Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  return R * c; // in metres
+}
+
+async function sortConcertsByClosest() {
+  if (!userLocation) {
+    try {
+      await getUserLocation();
+    } catch (error) {
+      console.error("Failed to get user location for sorting:", error);
+      return; 
+    }
+  }
+
+  if (!userLocation) {
+    alert("Cannot sort by closest without your location.");
+    return;
+  }
+
+  if (!allConcertsData || allConcertsData.length === 0) {
+    alert("No concerts loaded to sort.");
+    return;
+  }
+
+  const sortableConcerts = [...allConcertsData];
+
+  sortableConcerts.sort((a, b) => {
+    if (a.lat == null || a.lon == null) return 1; 
+    if (b.lat == null || b.lon == null) return -1; 
+
+    const distA = haversineDistance(userLocation, { lat: a.lat, lon: a.lon });
+    const distB = haversineDistance(userLocation, { lat: b.lat, lon: b.lon });
+    return distA - distB;
+  });
+
+  const concertListElement = document.getElementById('concertList');
+  concertListElement.innerHTML = '';
+
+  sortableConcerts.forEach(appendToList);
+}
+
+setDateConstraints();
+populateTimeOptions();
+loadConcerts(); 
+switchTab('homeTab');
+
+function handlePostButtonClick() {
+  const token = localStorage.getItem('token');
+  if (token) {
+    switchTab('postTab');
+  } else {
+    alert('You need an account to post a show. Please register or log in first.');
+    switchTab('registerTab');
+  }
+}
+
+if (document.getElementById('mapTab').classList.contains('active')) {
+  map.invalidateSize();
+}
+
+function toggleGenreDropdown() {
+  const list = document.getElementById('genreOptions');
+  list.style.display = list.style.display === 'block' ? 'none' : 'block';
+}
+
+document.addEventListener('click', function (event) {
+  const multiselect = document.querySelector('.custom-multiselect');
+  if (multiselect && !multiselect.contains(event.target)) { // Added null check for multiselect
+    document.getElementById('genreOptions').style.display = 'none';
+  }
+});
+
+document.querySelectorAll('#genreOptions input[type="checkbox"]').forEach(cb => {
+  cb.addEventListener('change', () => {
+    const selected = Array.from(document.querySelectorAll('#genreOptions input[type="checkbox"]:checked')).map(cb => cb.value);
+    document.getElementById('selectedGenres').value = JSON.stringify(selected);
+    document.querySelector('.selected-options').textContent = selected.length > 0 ? selected.join(', ') : 'Select Genres';
+  });
+});
+
+
+// Function to update UI based on login status
+function updateAuthUI() {
+  const token = localStorage.getItem('token');
+  // Select navigation spans directly using their onclick attribute or id
+  const postTabNav = document.querySelector('nav span[onclick="switchTab(\'postTab\')"]');
+  const registerTabNav = document.querySelector('nav span[onclick="switchTab(\'registerTab\')"]');
+  const loginTabNav = document.querySelector('nav span[onclick="switchTab(\'loginTab\')"]');
+  const logoutButtonNav = document.getElementById('logoutButton');
+
+  if (token) {
+    if (postTabNav) postTabNav.style.display = 'inline-block';
+    if (registerTabNav) registerTabNav.style.display = 'none';
+    if (loginTabNav) loginTabNav.style.display = 'none';
+    if (logoutButtonNav) logoutButtonNav.style.display = 'inline-block';
+  } else {
+    if (postTabNav) postTabNav.style.display = 'none';
+    if (registerTabNav) registerTabNav.style.display = 'inline-block';
+    if (loginTabNav) loginTabNav.style.display = 'inline-block';
+    if (logoutButtonNav) logoutButtonNav.style.display = 'none';
+  }
+  console.log('updateAuthUI called. Token present:', !!token);
+}
+
+// Call on page load
+document.addEventListener('DOMContentLoaded', updateAuthUI);
+
+
+// Register Form Submission
+document.getElementById('registerForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const formData = new FormData(form);
+  const data = Object.fromEntries(formData);
+
+  try {
+    const response = await fetch('http://localhost:3000/api/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+
+    const result = await response.json();
+    if (!response.ok) {
+      throw new Error(result.error || 'Registration failed');
+    }
+    alert(result.message);
+    form.reset();
+    switchTab('loginTab'); // Redirect to login after registration
+  } catch (error) {
+    alert(`Error: ${error.message}`);
+  }
+});
+
+// Login Form Submission
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const formData = new FormData(form);
+  const data = Object.fromEntries(formData);
+
+  try {
+    const response = await fetch('http://localhost:3000/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+
+    const result = await response.json();
+    if (!response.ok) {
+      throw new Error(result.error || 'Login failed');
+    }
+
+    localStorage.setItem('token', result.token); // Store JWT
+    alert('Logged in successfully!');
+    form.reset();
+    updateAuthUI(); // Update UI after successful login
+    switchTab('homeTab'); // Redirect to home after login
+  } catch (error) {
+    alert(`Error: ${error.message}`);
+  }
+});
+
+// Logout function
+function logout() {
+  localStorage.removeItem('token');
+  alert('Logged out.');
+  updateAuthUI(); // Update UI after logout
+  switchTab('homeTab');
+}
+
+document.getElementById('showForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const submitButton = form.querySelector('button[type="submit"]');
+  const formData = new FormData(form);
+  const data = Object.fromEntries(formData);
+
+  console.log('--- Show Form Submission Started ---');
+  let token = localStorage.getItem('token');
+  console.log('Token from localStorage (before check):', token);
+
+  if (!token) {
+    console.warn('Client-side: No token found in localStorage. Redirecting to login.');
+    alert('You must be logged in to submit a show.');
+    switchTab('loginTab');
+    return;
+  }
+
+  token = String(token);
+
+  submitButton.disabled = true;
+  submitButton.textContent = 'Submitting...';
+
+  try {
+    console.log('Client-side: Attempting to send fetch request with token:', token);
+    const response = await fetch('http://localhost:3000/api/concerts', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-auth-token': token // Send the token
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      console.error('Server responded with error:', error);
+      throw new Error(error.error || 'Server error');
+    }
+
+    const newConcert = await response.json();
+    console.log('Concert posted successfully:', newConcert);
+    
+    allConcertsData.push(newConcert); 
+
+    addConcertMarker(newConcert); // Add to map
+    appendToList(newConcert); // Add to list
+    form.reset();
+    setDateConstraints();
+    alert('Concert posted!');
+
+  } catch (error) {
+    console.error('Client-side: Error during concert submission:', error);
+    alert(`Error: ${error.message}`);
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = 'Submit';
+    console.log('--- Show Form Submission Finished ---');
+  }
+});
+
+// Add event listener for the "Sort by Closest" button
+document.addEventListener('DOMContentLoaded', () => {
+    const sortByClosestButton = document.getElementById('sortByClosestButton');
+    if (sortByClosestButton) {
+        sortByClosestButton.addEventListener('click', sortConcertsByClosest);
+    } else {
+        console.warn('Sort by Closest button not found. Make sure its HTML is correctly added.');
+    }
+});
+
+</script>
+
+</body>
+</html>
