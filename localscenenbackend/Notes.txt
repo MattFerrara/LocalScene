@@ -1,0 +1,5 @@
+-Don't show past times on current day
+-Clean up frontend
+
+
+
