@@ -1,10 +1,10 @@
-##LocalScene
+# LocalScene
 
-#Project Overview
+## Project Overview
 
 LocalScene is a web-based platform designed to centralize and simplify the discovery and promotion of local concert events. The project aims to address the fragmentation of information in local music scenes by providing a single, intuitive hub for users to find upcoming shows and for artists and venues to submit their events. Key features include an interactive map for geographical discovery, a chronological list view, and a secure system for user authentication and concert submission.
 
-#Features
+## Features
 
   - Interactive Map View: Browse upcoming concerts on a map powered by Leaflet.js. Markers are clustered to improve performance and readability in dense areas.
 
@@ -18,9 +18,9 @@ LocalScene is a web-based platform designed to centralize and simplify the disco
 
   - Automatic Deletion: Past concerts are automatically removed from the database one hour after their scheduled start time using a MongoDB TTL (Time-To-Live) index.
 
-#Technology Stack
+## Technology Stack
 
-Frontend
+### Frontend
 
   - HTML, CSS, JavaScript: Vanilla web technologies for the user interface.
 
@@ -28,7 +28,7 @@ Frontend
 
   - Leaflet.markercluster: A plugin for efficient marker management and clustering.
 
-Backend
+### Backend
 
    - Node.js: The JavaScript runtime environment.
 
@@ -42,13 +42,13 @@ Backend
 
    - Nodemailer: For sending account verification emails.
 
-#External Services
+## External Services
 
   - Geocode.maps.co: Geocoding API for converting addresses to coordinates.
 
   - Timezonedb: Timezone API for accurate time zone and UTC conversion.
 
-#Local Setup
+## Local Setup
 
 To set up and run the LocalScene project locally, follow these steps:
 
