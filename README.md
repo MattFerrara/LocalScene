@@ -53,3 +53,25 @@ LocalScene is a web-based platform designed to centralize and simplify the disco
 To set up and run the LocalScene project locally, follow these steps:
 
    - Clone the repository:
+   gh repo clone MattFerrara/LocalScene
+
+   - Install dependencies:
+   npm install
+
+   - Set up environment variables:
+   Create a .env file in the root directory and add the following variables, replacing the placeholder values with your own keys and configurations:
+    MONGO_URI="your_mongodb_connection_string"
+    JWT_SECRET="your_secret_key"
+    GEOCODE_KEY="your_geocode_api_key"
+    TZDB_KEY="your_timezonedb_api_key"
+    EMAIL_SERVICE_HOST="your_email_host"
+    EMAIL_SERVICE_PORT="your_email_port"
+    EMAIL_AUTH_USER="your_email_user"
+    EMAIL_AUTH_PASS="your_email_password"
+
+   - Run the server:
+   Navigate to the localscene folder that contains the server.js file and run the command
+   Node server.js
+
+   - Run the frontend:
+   Navigate to the frontend directory and open the index.html file in your browser to view the application. The frontend is a static site and communicates with the backend API running locally.
