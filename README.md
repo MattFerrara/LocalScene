@@ -60,6 +60,7 @@ To set up and run the LocalScene project locally, follow these steps:
 
    - Set up environment variables:
       - Create a .env file in the root directory and add the following variables, replacing the placeholder values with your own keys and configurations
+     
     MONGO_URI="your_mongodb_connection_string"
     JWT_SECRET="your_secret_key"
     GEOCODE_KEY="your_geocode_api_key"
