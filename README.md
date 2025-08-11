@@ -80,15 +80,15 @@ To set up and run the LocalScene project locally, follow these steps:
 
 ## File Hierarchy
 
-/localscenebackend
-├── images/               #image folder for image carousel
-│   ├── concert1.jpg       
-│   └── concert2.jpg
-│   └── concert3.jpg     
-├── node_modules/         # Folder for npm packages
-│── index.html        # The main frontend HTML file
-│── style.css         # The stylesheet for the frontend
-├── .env                  # Environment variables file (not committed to Git)
-├── package.json          # Project metadata and dependencies
-├── server.js             # The backend server application code
-└── README.md             # Project overview and documentation
+    /localscenebackend
+    ├── images/               #image folder for image carousel
+    │   ├── concert1.jpg       
+    │   └── concert2.jpg
+    │   └── concert3.jpg     
+    ├── node_modules/         # Folder for npm packages
+    │── index.html        # The main frontend HTML file
+    │── style.css         # The stylesheet for the frontend
+    ├── .env                  # Environment variables file (not committed to Git)
+    ├── package.json          # Project metadata and dependencies
+    ├── server.js             # The backend server application code
+    └── README.md             # Project overview and documentation
